@@ -10,6 +10,8 @@ import org.junit.Before
 import org.junit.Test
 import java.text.DecimalFormat
 
+import net.pot8os.kotlintestsample.pages.CalculatorPage
+
 /**
  * @author So Nakamura, 2020-Feb-15
  */
@@ -72,4 +74,35 @@ abstract class CalculatorSpec {
         onView(withId(R.id.button_calc)).perform(click())
         onView(withId(R.id.field)).check(matches(withText("${333 / 100.0}")))
     }
+
+    /*@Test
+    fun testAllClear() {
+        // Perform a calculation first
+        onView(withId(R.id.button_2)).perform(click())
+        onView(withId(R.id.button_0)).perform(click()) // 20
+        onView(withId(R.id.button_sum)).perform(click())
+        onView(withId(R.id.button_5)).perform(click()) // +5
+        onView(withId(R.id.button_calc)).perform(click())
+
+        // Tap the AC button
+        onView(withId(R.id.button_all_clear)).perform(click())
+
+        // Verify that the field reset to "0"
+        onView(withId(R.id.field)).check(matches(withText("0")))
+    }*/
+    // above is the none refactored version of AC test
+
+    @Test
+    fun testAllClear_usingPageObject() {
+        val calculator = CalculatorPage()
+
+        calculator
+            .pressNumber(R.id.button_2)
+            .pressNumber(R.id.button_0) // 20
+            .pressOperator(R.id.button_sum)
+            .pressNumber(R.id.button_5) // +5
+            .pressCalc()
+            .pressAllClear()
+            .assertResultIs("0")
+    } // refactored using Page Object Model
 }
